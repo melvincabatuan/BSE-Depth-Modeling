@@ -48,6 +48,8 @@
 		3A0CBA801A3CC63F004511CB /* libopencv_ximgproc.3.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0CBA5B1A3CC63F004511CB /* libopencv_ximgproc.3.0.0.dylib */; };
 		3A0CBA811A3CC63F004511CB /* libopencv_xobjdetect.3.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0CBA5C1A3CC63F004511CB /* libopencv_xobjdetect.3.0.0.dylib */; };
 		3A0CBA821A3CC63F004511CB /* libopencv_xphoto.3.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0CBA5D1A3CC63F004511CB /* libopencv_xphoto.3.0.0.dylib */; };
+		3A900F6C1A3DA94D004D7A29 /* estimateFeatureHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A900F6A1A3DA94D004D7A29 /* estimateFeatureHomography.cpp */; };
+		3A900F6F1A3DB0DF004D7A29 /* RobustMatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A900F6D1A3DB0DF004D7A29 /* RobustMatcher.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -108,6 +110,10 @@
 		3A0CBA5B1A3CC63F004511CB /* libopencv_ximgproc.3.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_ximgproc.3.0.0.dylib; path = /usr/local/lib/libopencv_ximgproc.3.0.0.dylib; sourceTree = "<absolute>"; };
 		3A0CBA5C1A3CC63F004511CB /* libopencv_xobjdetect.3.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_xobjdetect.3.0.0.dylib; path = /usr/local/lib/libopencv_xobjdetect.3.0.0.dylib; sourceTree = "<absolute>"; };
 		3A0CBA5D1A3CC63F004511CB /* libopencv_xphoto.3.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_xphoto.3.0.0.dylib; path = /usr/local/lib/libopencv_xphoto.3.0.0.dylib; sourceTree = "<absolute>"; };
+		3A900F6A1A3DA94D004D7A29 /* estimateFeatureHomography.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = estimateFeatureHomography.cpp; sourceTree = "<group>"; };
+		3A900F6B1A3DA94D004D7A29 /* estimateFeatureHomography.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = estimateFeatureHomography.h; sourceTree = "<group>"; };
+		3A900F6D1A3DB0DF004D7A29 /* RobustMatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RobustMatcher.cpp; sourceTree = "<group>"; };
+		3A900F6E1A3DB0DF004D7A29 /* RobustMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobustMatcher.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +191,10 @@
 				3A0CBA321A3CC5D7004511CB /* Project.h */,
 				3A0CBA331A3CC5D7004511CB /* VideoWriter.cpp */,
 				3A0CBA341A3CC5D7004511CB /* VideoWriterv2.cpp */,
+				3A900F6A1A3DA94D004D7A29 /* estimateFeatureHomography.cpp */,
+				3A900F6B1A3DA94D004D7A29 /* estimateFeatureHomography.h */,
+				3A900F6D1A3DB0DF004D7A29 /* RobustMatcher.cpp */,
+				3A900F6E1A3DB0DF004D7A29 /* RobustMatcher.h */,
 			);
 			path = BSEProject;
 			sourceTree = "<group>";
@@ -290,6 +300,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A900F6F1A3DB0DF004D7A29 /* RobustMatcher.cpp in Sources */,
+				3A900F6C1A3DA94D004D7A29 /* estimateFeatureHomography.cpp in Sources */,
 				3A0CBA351A3CC5D7004511CB /* VideoWriter.cpp in Sources */,
 				3A0CBA361A3CC5D7004511CB /* VideoWriterv2.cpp in Sources */,
 				3A0CBA2A1A3CC52E004511CB /* main.cpp in Sources */,
@@ -422,6 +434,7 @@
 				3A0CBA2F1A3CC52E004511CB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

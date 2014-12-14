@@ -10,10 +10,16 @@
 #define BSEprojectLocal_Project_h
 
 #include <opencv2/core.hpp>
+#include <sys/stat.h>
+
+#include "estimateFeatureHomography.h"
+
 
 bool writeRGB(void);
 void showDepth (cv::Mat &in_depth, cv::Mat &out_color);
 void colorizeDepth ( cv::Mat &in_depth,cv::Mat &out_color ) ;
 int writeRGBv2(void);
+
+bool dirExists(const char *path);
 
 #endif

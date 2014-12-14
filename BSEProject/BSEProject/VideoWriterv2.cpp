@@ -9,8 +9,23 @@
 #include <iostream>
 #include "Project.h"
 #include "cvni2.h"
+#include <sys/stat.h>
 
 using namespace std;
+using namespace cv;
+
+bool dirExists(const char *path)
+{
+    struct stat info;
+    
+    if(stat( path, &info ) != 0)
+        return false;
+    else if(info.st_mode & S_IFDIR)
+        return true;
+    else
+        return false;
+}
+
 
 int writeRGBv2(void) {
     try {
@@ -19,22 +34,88 @@ int writeRGBv2(void) {
         string RGBname = file + "RGB.avi";
         string Depthname = file + "Depth.avi";
         string fileDat = file + "Dat.xml";
-
+        
+        string pathname = file + "dep";
+        
+        char * dir = getcwd(NULL, 0); // Platform-dependent, see reference link below
+        printf("Current dir: %s\n", dir);
+        
+        if (!dirExists(pathname.c_str())) {
+            
+            int statDir = mkdir(pathname.c_str(),S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+            if (statDir == 0)
+                cout << "Created " << pathname << "Directory" << endl;
+            else
+                cout << "cannot create " <<pathname <<"Directory" << endl;
+        }
+        
+        
         CvNI2 camera;
         camera.open();
+        
+        if( !camera.isOpen() )
+        {
+            cout << "Can not open a capture object." << endl;
+            return -1;
+        }
+        else
+            cout << "Camera Opened..." << endl;
+        
+        
+        
+        cv::VideoWriter rgbVid, depthVid;
         cv::Mat color,depth,depth_color;
-
+        
+        
+        
+        // Print some avalible device settings.
+        cout << "\nDepth generator output mode:" << endl <<
+        "FRAME_WIDTH      " << camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_WIDTH ) << endl <<
+        "FRAME_HEIGHT     " << camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_HEIGHT ) << endl <<
+        "FRAME_MAX_DEPTH  " << camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_OPENNI_FRAME_MAX_DEPTH ) << " mm" << endl <<
+        "FPS              " << camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FPS ) << endl <<
+        "REGISTRATION     " << camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_OPENNI_REGISTRATION ) << endl <<
+        "Focal Length     " << camera.get( CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH) << "mm" << endl <<
+        "Base Line        " << camera.get( CAP_OPENNI_DEPTH_GENERATOR_BASELINE) << "mm" << endl;
+        
+        if( camera.get( CAP_OPENNI_IMAGE_GENERATOR_PRESENT ) )
+        {
+            cout <<
+            "\nImage generator output mode:" << endl <<
+            "FRAME_WIDTH   " << camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FRAME_WIDTH ) << endl <<
+            "FRAME_HEIGHT  " << camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FRAME_HEIGHT ) << endl <<
+            "FPS           " << camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FPS ) << endl;
+        }
+        else
+        {
+            cout << "\nDevice doesn't contain image generator." << endl;
+        }
+        
+        Size sz = Size ( (int) camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FRAME_WIDTH ), (int)camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FRAME_HEIGHT ));
+        rgbVid.open(RGBname, VideoWriter::fourcc('D','I','V','X'), 30, sz, true );
+        Size szDep = Size ( (int) camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_WIDTH ),
+                           (int) camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_HEIGHT ));
+        depthVid.open(Depthname, VideoWriter::fourcc('F','F','V','1'), 30, szDep, false);
+        int ctr = 0;
+        
         bool stop=false;
         while ( camera.grab() && ! stop ) {
+            Mat depth,color;
+            Mat bgrImage,rgbImage;
+            
             camera.retrieve ( color,depth );
+            
+            string fileImg = pathname + "/" + file + to_string(ctr) + ".png";
+            imwrite(fileImg, depth);
+            //            depthVid << depthMap;
+//            cvtColor(bgrImage, rgbImage, COLOR_BGR2RGB);
+            rgbVid << color;
             
             showDepth ( depth,depth_color );
             cv::imshow ( "color",color );
             cv::imshow ( "depth",depth_color );
             
             stop= cv::waitKey ( 10 ) ==27;
-            
-        cout << "Hello World" << endl;
         };
         cerr<<"Finish"<<endl;
     }catch ( std::exception &ex ) {
@@ -45,8 +126,10 @@ int writeRGBv2(void) {
 
 void showDepth (cv::Mat &in_depth, cv::Mat &out_color) {
     double min,max;
+    cv::Mat tempMap;
     cv::minMaxIdx(in_depth,&min, &max);
-    cv::convertScaleAbs(in_depth, out_color, 255 / max);
+    cv::convertScaleAbs(in_depth, tempMap, 255 / (max-min),-min);
+    cv::applyColorMap(tempMap, out_color, cv::COLORMAP_JET);
 }
 
 

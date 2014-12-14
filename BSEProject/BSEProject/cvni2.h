@@ -56,7 +56,9 @@ class CvNI2 {
     inline  void release() throw ( cv::Exception );
     //indicates if the device is opened
     inline bool isOpen() const {return _isOpen;}
-
+    
+    inline double get(int propIdx) { return (getProperty(propIdx));}
+    
     static const int INVALID_PIXEL_VAL = 0;
     
     private:
@@ -131,162 +133,162 @@ bool CvNI2::readCamerasParam() {
     
     return true;
 }
-//
-//double CvNI2::getProperty( int propIdx )
-//{
-//    double propValue = 0;
-//    
-//    if( isOpen() )
-//    {
-//        int purePropIdx = propIdx & ~cv::CAP_OPENNI_GENERATORS_MASK;
-//        
-//        if( (propIdx & cv::CAP_OPENNI_GENERATORS_MASK) == cv::CAP_OPENNI_IMAGE_GENERATOR )
-//        {
-//            propValue = getImageGeneratorProperty( purePropIdx );
-//        }
-//        else if( (propIdx & cv::CAP_OPENNI_GENERATORS_MASK) == cv::CAP_OPENNI_DEPTH_GENERATOR )
-//        {
-//            propValue = getDepthGeneratorProperty( purePropIdx );
-//        }
-//        else
-//        {
-//            propValue = getCommonProperty( purePropIdx );
-//        }
-//    }
-//    
-//    return propValue;
-//}
-//
-//double CvNI2::getCommonProperty( int propIdx )
-//{
-//    double propValue = 0;
-//    
-//    switch( propIdx )
-//    {
-//            // There is a set of properties that correspond to depth generator by default
-//            // (is they are pass without particular generator flag). Two reasons of this:
-//            // 1) We can assume that depth generator is the main one for depth sensor.
-//            // 2) In the initial vertions of OpenNI integration to OpenCV the value of
-//            //    flag cv::CAP_OPENNI_DEPTH_GENERATOR was 0 (it isn't zero now).
-//        case cv::CAP_PROP_OPENNI_GENERATOR_PRESENT :
-//        case cv::CAP_PROP_FRAME_WIDTH :
-//        case cv::CAP_PROP_FRAME_HEIGHT :
-//        case cv::CAP_PROP_FPS :
-//        case cv::CAP_PROP_OPENNI_FRAME_MAX_DEPTH :
-//        case cv::CAP_PROP_OPENNI_BASELINE :
-//        case cv::CAP_PROP_OPENNI_FOCAL_LENGTH :
-//        case cv::CAP_PROP_OPENNI_REGISTRATION :
-//            propValue = getDepthGeneratorProperty( propIdx );
-//            break;
-//        case cv::CAP_PROP_OPENNI2_SYNC :
-//            propValue = _device.getDepthColorSyncEnabled();
-//        case cv::CAP_PROP_OPENNI2_MIRROR:
-//        {
-//            bool isMirroring = _color_stream.getMirroringEnabled() && _depth_stream.getMirroringEnabled();
-//            propValue = isMirroring ? 1.0 : 0.0;
-//            break;
-//        }
-//        default :
-//            CV_Error( cv::Error::StsBadArg, cv::format("Such parameter (propIdx=%d) isn't supported for getting.\n", propIdx) );
-//    }
-//    
-//    return propValue;
-//}
-//
-//double CvNI2::getDepthGeneratorProperty( int propIdx )
-//{
-//    double propValue = 0;
-//    if( !_depth_stream.isValid() )
-//        return propValue;
-//    
-//    openni::VideoMode mode;
-//    
-//    switch( propIdx )
-//    {
-//        case cv::CAP_PROP_OPENNI_GENERATOR_PRESENT :
-//            CV_DbgAssert(_depth_stream.isValid());
-//            propValue = 1.;
-//            break;
-//        case cv::CAP_PROP_FRAME_WIDTH :
-//            propValue = _depth_stream.getVideoMode().getResolutionX();
-//            break;
-//        case cv::CAP_PROP_FRAME_HEIGHT :
-//            propValue = _depth_stream.getVideoMode().getResolutionY();
-//            break;
-//        case cv::CAP_PROP_FPS :
-//            mode = _depth_stream.getVideoMode();
-//            propValue = mode.getFps();
-//            break;
-//        case cv::CAP_PROP_OPENNI_FRAME_MAX_DEPTH :
-//            propValue = _depth_stream.getMaxPixelValue();
-//            break;
-//        case cv::CAP_PROP_OPENNI_BASELINE :
-//            propValue = baseline;
-//            break;
-//        case cv::CAP_PROP_OPENNI_FOCAL_LENGTH :
-//            propValue = (double)depthFocalLength_VGA;
-//            break;
-//        case cv::CAP_PROP_OPENNI_REGISTRATION :
-//            propValue = _device.getImageRegistrationMode();
-//            break;
-//        case cv::CAP_PROP_POS_MSEC :
-//            propValue = (double)_depth_frame.getTimestamp();
-//            break;
-//        case cv::CAP_PROP_POS_FRAMES :
-//            propValue = _depth_frame.getFrameIndex();
-//            break;
-//        default :
-//            CV_Error( cv::Error::StsBadArg, cv::format("Depth generator does not support such parameter (propIdx=%d) for getting.\n", propIdx) );
-//    }
-//    
-//    return propValue;
-//}
-//
-//double CvNI2::getImageGeneratorProperty( int propIdx )
-//{
-//    double propValue = 0.;
-//    if( !_color_stream.isValid() )
-//        return propValue;
-//    
-//    openni::VideoMode mode;
-//    switch( propIdx )
-//    {
-//        case cv::CAP_PROP_OPENNI_GENERATOR_PRESENT :
-//            CV_DbgAssert( _color_stream.isValid() );
-//            propValue = 1.;
-//            break;
-//        case cv::CAP_PROP_FRAME_WIDTH :
-//            propValue = _color_stream.getVideoMode().getResolutionX();
-//            break;
-//        case cv::CAP_PROP_FRAME_HEIGHT :
-//            propValue = _color_stream.getVideoMode().getResolutionY();
-//            break;
-//        case cv::CAP_PROP_FPS :
-//            propValue = _color_stream.getVideoMode().getFps();
-//            break;
-//        case cv::CAP_PROP_POS_MSEC :
-//            propValue = (double)_color_frame.getTimestamp();
-//            break;
-//        case cv::CAP_PROP_POS_FRAMES :
-//            propValue = (double)_color_frame.getFrameIndex();
-//            break;
-//        default :
-//            CV_Error( cv::Error::StsBadArg, cv::format("Image generator does not support such parameter (propIdx=%d) for getting.\n", propIdx) );
-//    }
-//    
-//    return propValue;
-//}
-//
-//inline void getDepthMapFromMetaData(const openni::VideoFrameRef& depthMetaData, cv::Mat& depthMap, int noSampleValue, int shadowValue)
-//{
-//    depthMap.create(depthMetaData.getHeight(), depthMetaData.getWidth(), CV_16UC1);
-//    depthMap.data = (uchar*)depthMetaData.getData();
-//    
-//    cv::Mat badMask = (depthMap == (double)noSampleValue) | (depthMap == (double)shadowValue) | (depthMap == 0);
-//    
-//    // mask the pixels with invalid depth
-//    depthMap.setTo( cv::Scalar::all( CvNI2::INVALID_PIXEL_VAL ), badMask );
-//}
+
+double CvNI2::getProperty( int propIdx )
+{
+    double propValue = 0;
+    
+    if( isOpen() )
+    {
+        int purePropIdx = propIdx & ~cv::CAP_OPENNI_GENERATORS_MASK;
+        
+        if( (propIdx & cv::CAP_OPENNI_GENERATORS_MASK) == cv::CAP_OPENNI_IMAGE_GENERATOR )
+        {
+            propValue = getImageGeneratorProperty( purePropIdx );
+        }
+        else if( (propIdx & cv::CAP_OPENNI_GENERATORS_MASK) == cv::CAP_OPENNI_DEPTH_GENERATOR )
+        {
+            propValue = getDepthGeneratorProperty( purePropIdx );
+        }
+        else
+        {
+            propValue = getCommonProperty( purePropIdx );
+        }
+    }
+    
+    return propValue;
+}
+
+double CvNI2::getCommonProperty( int propIdx )
+{
+    double propValue = 0;
+    
+    switch( propIdx )
+    {
+            // There is a set of properties that correspond to depth generator by default
+            // (is they are pass without particular generator flag). Two reasons of this:
+            // 1) We can assume that depth generator is the main one for depth sensor.
+            // 2) In the initial vertions of OpenNI integration to OpenCV the value of
+            //    flag cv::CAP_OPENNI_DEPTH_GENERATOR was 0 (it isn't zero now).
+        case cv::CAP_PROP_OPENNI_GENERATOR_PRESENT :
+        case cv::CAP_PROP_FRAME_WIDTH :
+        case cv::CAP_PROP_FRAME_HEIGHT :
+        case cv::CAP_PROP_FPS :
+        case cv::CAP_PROP_OPENNI_FRAME_MAX_DEPTH :
+        case cv::CAP_PROP_OPENNI_BASELINE :
+        case cv::CAP_PROP_OPENNI_FOCAL_LENGTH :
+        case cv::CAP_PROP_OPENNI_REGISTRATION :
+            propValue = getDepthGeneratorProperty( propIdx );
+            break;
+        case cv::CAP_PROP_OPENNI2_SYNC :
+            propValue = _device.getDepthColorSyncEnabled();
+        case cv::CAP_PROP_OPENNI2_MIRROR:
+        {
+            bool isMirroring = _color_stream.getMirroringEnabled() && _depth_stream.getMirroringEnabled();
+            propValue = isMirroring ? 1.0 : 0.0;
+            break;
+        }
+        default :
+            CV_Error( cv::Error::StsBadArg, cv::format("Such parameter (propIdx=%d) isn't supported for getting.\n", propIdx) );
+    }
+    
+    return propValue;
+}
+
+double CvNI2::getDepthGeneratorProperty( int propIdx )
+{
+    double propValue = 0;
+    if( !_depth_stream.isValid() )
+        return propValue;
+    
+    openni::VideoMode mode;
+    
+    switch( propIdx )
+    {
+        case cv::CAP_PROP_OPENNI_GENERATOR_PRESENT :
+            CV_DbgAssert(_depth_stream.isValid());
+            propValue = 1.;
+            break;
+        case cv::CAP_PROP_FRAME_WIDTH :
+            propValue = _depth_stream.getVideoMode().getResolutionX();
+            break;
+        case cv::CAP_PROP_FRAME_HEIGHT :
+            propValue = _depth_stream.getVideoMode().getResolutionY();
+            break;
+        case cv::CAP_PROP_FPS :
+            mode = _depth_stream.getVideoMode();
+            propValue = mode.getFps();
+            break;
+        case cv::CAP_PROP_OPENNI_FRAME_MAX_DEPTH :
+            propValue = _depth_stream.getMaxPixelValue();
+            break;
+        case cv::CAP_PROP_OPENNI_BASELINE :
+            propValue = baseline;
+            break;
+        case cv::CAP_PROP_OPENNI_FOCAL_LENGTH :
+            propValue = (double)depthFocalLength_VGA;
+            break;
+        case cv::CAP_PROP_OPENNI_REGISTRATION :
+            propValue = _device.getImageRegistrationMode();
+            break;
+        case cv::CAP_PROP_POS_MSEC :
+            propValue = (double)_depth_frame.getTimestamp();
+            break;
+        case cv::CAP_PROP_POS_FRAMES :
+            propValue = _depth_frame.getFrameIndex();
+            break;
+        default :
+            CV_Error( cv::Error::StsBadArg, cv::format("Depth generator does not support such parameter (propIdx=%d) for getting.\n", propIdx) );
+    }
+    
+    return propValue;
+}
+
+double CvNI2::getImageGeneratorProperty( int propIdx )
+{
+    double propValue = 0.;
+    if( !_color_stream.isValid() )
+        return propValue;
+    
+    openni::VideoMode mode;
+    switch( propIdx )
+    {
+        case cv::CAP_PROP_OPENNI_GENERATOR_PRESENT :
+            CV_DbgAssert( _color_stream.isValid() );
+            propValue = 1.;
+            break;
+        case cv::CAP_PROP_FRAME_WIDTH :
+            propValue = _color_stream.getVideoMode().getResolutionX();
+            break;
+        case cv::CAP_PROP_FRAME_HEIGHT :
+            propValue = _color_stream.getVideoMode().getResolutionY();
+            break;
+        case cv::CAP_PROP_FPS :
+            propValue = _color_stream.getVideoMode().getFps();
+            break;
+        case cv::CAP_PROP_POS_MSEC :
+            propValue = (double)_color_frame.getTimestamp();
+            break;
+        case cv::CAP_PROP_POS_FRAMES :
+            propValue = (double)_color_frame.getFrameIndex();
+            break;
+        default :
+            CV_Error( cv::Error::StsBadArg, cv::format("Image generator does not support such parameter (propIdx=%d) for getting.\n", propIdx) );
+    }
+    
+    return propValue;
+}
+
+inline void CvNI2::getDepthMapFromMetaData(const openni::VideoFrameRef& depthMetaData, cv::Mat& depthMap, int noSampleValue, int shadowValue)
+{
+    depthMap.create(depthMetaData.getHeight(), depthMetaData.getWidth(), CV_16UC1);
+    depthMap.data = (uchar*)depthMetaData.getData();
+    
+    cv::Mat badMask = (depthMap == (double)noSampleValue) | (depthMap == (double)shadowValue) | (depthMap == 0);
+    
+    // mask the pixels with invalid depth
+    depthMap.setTo( cv::Scalar::all( CvNI2::INVALID_PIXEL_VAL ), badMask );
+}
 
 void CvNI2::open ( std::string onifilepath ) throw ( cv::Exception ) {
     //INIT
@@ -381,11 +383,11 @@ void CvNI2::open ( std::string onifilepath ) throw ( cv::Exception ) {
         throw cv::Exception ( -1,std::string ( "OpenNI Couldn't start depth stream:" ) +openni::OpenNI::getExtendedError() ,__func__,__FILE__,__LINE__ );
 
     
-//    if( !readCamerasParams() )
-//    {
-//        CV_Error(cv::Error::StsError, cv::format("CvCapture_OpenNI2::CvCapture_OpenNI2 : Could not read cameras parameters\n"));
-//        return;
-//    }
+    if( !readCamerasParam() )
+    {
+        CV_Error(cv::Error::StsError, cv::format("CvCapture_OpenNI2::CvCapture_OpenNI2 : Could not read cameras parameters\n"));
+        return;
+    }
 
     _isOpen=true;
 }
@@ -422,7 +424,8 @@ void CvNI2::retrieve ( cv::Mat  &color,cv::Mat &depth ) throw ( cv::Exception ) 
     cv::Mat colorImage ( _color_frame.getHeight() ,_color_frame.getWidth() ,CV_8UC3, ( void* ) _color_frame.getData() );
     cv::cvtColor ( colorImage,color,cv::COLOR_RGB2BGR );
     depth.create ( _depth_frame.getHeight(),_depth_frame.getWidth(),CV_16UC1 );
-    memcpy ( depth.ptr<char> ( 0 ),_depth_frame.getData(),_depth_frame.getWidth() *_depth_frame.getHeight() *2 );
+    getDepthMapFromMetaData(_depth_frame, depth, noSampleValue, shadowValue);
+//    memcpy ( depth.ptr<char> ( 0 ),_depth_frame.getData(),_depth_frame.getWidth() *_depth_frame.getHeight() *2 );
 
 }
 

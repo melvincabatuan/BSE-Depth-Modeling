@@ -18,17 +18,6 @@
 using namespace std;
 using namespace cv;
 
-bool dirExists(const char *path)
-{
-    struct stat info;
-    
-    if(stat( path, &info ) != 0)
-        return false;
-    else if(info.st_mode & S_IFDIR)
-        return true;
-    else
-        return false;
-}
 
 
 bool writeRGB(void){
@@ -46,9 +35,9 @@ bool writeRGB(void){
     
         int statDir = mkdir(pathname.c_str(),S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if (statDir == 0)
-            cout << "Created " << pathname << "Directory" << endl;
+            cout << "Created " << pathname << " Directory" << endl;
         else
-            cerr << "cannot create " <<pathname <<"Directory" << endl;
+            cerr << "cannot create " <<pathname <<" Directory" << endl;
     }
         
    
