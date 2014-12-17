@@ -9,7 +9,6 @@
 #ifndef BSEprojectLocal_Project_h
 #define BSEprojectLocal_Project_h
 
-#include <opencv2/core.hpp>
 #include <sys/stat.h>
 
 #include "estimateFeatureHomography.h"
