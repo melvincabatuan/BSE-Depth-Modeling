@@ -14,6 +14,7 @@
 
 #include "estimateFeatureHomography.h"
 
+int listCreator(std::string fileName, std::string files);
 
 bool writeRGB(void);
 void showDepth (cv::Mat &in_depth, cv::Mat &out_color);

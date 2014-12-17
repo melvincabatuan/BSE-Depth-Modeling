@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include <iomanip>
 #include "Project.h"
 #include "cvni2.h"
 #include <sys/stat.h>
@@ -30,7 +31,7 @@ bool dirExists(const char *path)
 int writeRGBv2(void) {
     try {
 
-        string file = "tummy1";
+        string file = "tummy1_";
         string RGBname = file + "RGB.avi";
         string Depthname = file + "Depth.avi";
         string fileDat = file + "Dat.xml";
@@ -44,9 +45,9 @@ int writeRGBv2(void) {
             
             int statDir = mkdir(pathname.c_str(),S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
             if (statDir == 0)
-                cout << "Created " << pathname << "Directory" << endl;
+                cout << "Created " << pathname << "Directory " << endl;
             else
-                cout << "cannot create " <<pathname <<"Directory" << endl;
+                cout << "cannot create " <<pathname <<"Directory " << endl;
         }
         
         
@@ -95,9 +96,9 @@ int writeRGBv2(void) {
         rgbVid.open(RGBname, VideoWriter::fourcc('D','I','V','X'), 30, sz, true );
         Size szDep = Size ( (int) camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_WIDTH ),
                            (int) camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_HEIGHT ));
-        depthVid.open(Depthname, VideoWriter::fourcc('F','F','V','1'), 30, szDep, false);
-        int ctr = 0;
-        
+//        depthVid.open(Depthname, VideoWriter::fourcc('F','F','V','1'), 30, szDep, false);
+        int ctr = 1;
+        ostringstream ss;
         bool stop=false;
         while ( camera.grab() && ! stop ) {
             Mat depth,color;
@@ -105,7 +106,9 @@ int writeRGBv2(void) {
             
             camera.retrieve ( color,depth );
             
-            string fileImg = pathname + "/" + file + to_string(ctr) + ".png";
+            ss.str("");
+            ss << setfill('0') << setw(5) << ctr;
+            string fileImg = pathname + "/" + file + ss.str() + ".png";
             imwrite(fileImg, depth);
             //            depthVid << depthMap;
 //            cvtColor(bgrImage, rgbImage, COLOR_BGR2RGB);
@@ -116,6 +119,7 @@ int writeRGBv2(void) {
             cv::imshow ( "depth",depth_color );
             
             stop= cv::waitKey ( 10 ) ==27;
+            ctr++;
         };
         cerr<<"Finish"<<endl;
     }catch ( std::exception &ex ) {

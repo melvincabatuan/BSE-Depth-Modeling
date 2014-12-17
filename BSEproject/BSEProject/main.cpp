@@ -16,7 +16,9 @@ int main(int argc, const char * argv[]) {
     
     
     
-    bool status = writeRGB();
+//    bool status = writeRGBv2();
+    
+    listCreator("tummy1_dep/tummy1.yaml", "tummy1_dep/*.png");
     
     
     return 0;
