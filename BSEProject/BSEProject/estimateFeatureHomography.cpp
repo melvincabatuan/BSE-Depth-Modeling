@@ -5,9 +5,10 @@
  *      Author: eriba
  */
 
+#include <iostream>
 #include "estimateFeatureHomography.h"
 #include <time.h>
-
+#include <opencv2/opencv.hpp>
 #include <opencv2/features2d/features2d.hpp>
 
 RobustMatcher::~RobustMatcher()
@@ -91,6 +92,48 @@ void RobustMatcher::symmetryTest( const std::vector<std::vector<cv::DMatch> >& m
     
 }
 
+void RobustMatcher::showFeaturesDescriptors (std::vector<cv::KeyPoint>& points_obj, cv::Mat& desc_obj, std::vector<cv::KeyPoint>& points_scene, cv::Mat& desc_scene) {
+    
+    points_obj = keypoints_object;
+    desc_obj = descriptors_object;
+    points_scene = keypoints_scene;
+    desc_scene = descriptors_scene;
+    
+}
+
+
+void RobustMatcher::robustMatch( const cv::Mat& object, const cv::Mat &scene, std::vector<cv::DMatch>& good_matches)
+{
+    // 1a. Detection of the ORB features
+    this->computeKeyPoints(scene, keypoints_scene);
+    this->computeKeyPoints(object, keypoints_object);
+    
+    // 1b. Extraction of the ORB descriptors
+    this->computeDescriptors(scene, keypoints_scene, descriptors_scene);
+    this->computeDescriptors(object, keypoints_object, descriptors_object);
+    
+    // 2. Match the two image descriptors
+    std::vector<std::vector<cv::DMatch> > matches12, matches21;
+    
+    // 2a. From image 1 to image 2
+    matcher_->knnMatch(descriptors_object, descriptors_scene, matches12, 2); // return 2 nearest neighbours
+    
+    // 2b. From image 2 to image 1
+    matcher_->knnMatch(descriptors_scene, descriptors_object, matches21, 2); // return 2 nearest neighbours
+    
+    // 3. Remove matches for which NN ratio is > than threshold
+    // clean image 1 -> image 2 matches
+    ratioTest(matches12);
+    // clean image 2 -> image 1 matches
+    ratioTest(matches21);
+    
+    // 4. Remove non-symmetrical matches
+    symmetryTest(matches12, matches21, good_matches);
+    
+    this->matchUsed = true;
+}
+
+
 void RobustMatcher::robustMatch( const cv::Mat& frame, std::vector<cv::DMatch>& good_matches,
                                 std::vector<cv::KeyPoint>& keypoints_frame, const cv::Mat& descriptors_model )
 {
@@ -120,6 +163,7 @@ void RobustMatcher::robustMatch( const cv::Mat& frame, std::vector<cv::DMatch>& 
     // 4. Remove non-symmetrical matches
     symmetryTest(matches12, matches21, good_matches);
     
+    this->matchUsed = true;
 }
 
 void RobustMatcher::fastRobustMatch( const cv::Mat& frame, std::vector<cv::DMatch>& good_matches,
@@ -148,5 +192,20 @@ void RobustMatcher::fastRobustMatch( const cv::Mat& frame, std::vector<cv::DMatc
     {
         if (!matchIterator->empty()) good_matches.push_back((*matchIterator)[0]);
     }
+    this->matchUsed = true;
     
+}
+
+cv::Mat RobustMatcher::computeHomography(std::vector<cv::Point2f> scene_points, std::vector<cv::Point2f> obj_points) {
+    
+    cv::Mat result;
+    
+    //Check whether RobustMatch was computed
+    if (!matchUsed)
+        std::cerr << "RMatcher Error: RobustMatch was not yet used" << std::endl;
+    
+    result = cv::findHomography(obj_points, scene_points, cv::FM_RANSAC, ransacReprojThreshold );
+    
+    
+    return result;
 }

@@ -65,6 +65,9 @@ public:
                       const std::vector<std::vector<cv::DMatch> >& matches2,
                       std::vector<cv::DMatch>& symMatches );
     
+    //Overload RobustMatch parameters
+    void robustMatch( const cv::Mat& object, const cv::Mat &scene, std::vector<cv::DMatch>& good_matches);
+    
     // Match feature points using ratio and symmetry test
     void robustMatch( const cv::Mat& frame, std::vector<cv::DMatch>& good_matches,
                      std::vector<cv::KeyPoint>& keypoints_frame,
@@ -75,6 +78,12 @@ public:
                          std::vector<cv::KeyPoint>& keypoints_frame,
                          const cv::Mat& descriptors_model );
     
+    //Return all used keypoints and descriptors
+    void showFeaturesDescriptors (std::vector<cv::KeyPoint>& points_obj, cv::Mat& desc_obj, std::vector<cv::KeyPoint>& points_scene, cv::Mat& desc_scene);
+    
+    //Compute Homography using RANSAC
+    //TODO add more options?
+    cv::Mat computeHomography(std::vector<cv::Point2f> points1, std::vector<cv::Point2f> points2);
 private:
     // pointer to the feature point detector object
     cv::Ptr<cv::FeatureDetector> detector_;
@@ -84,6 +93,13 @@ private:
     cv::Ptr<cv::DescriptorMatcher> matcher_;
     // max ratio between 1st and 2nd NN
     float ratio_;
+    // keypoints
+    std::vector<cv::KeyPoint> keypoints_object,keypoints_scene;
+    // Descriptors
+    cv::Mat descriptors_object, descriptors_scene;
+    // check whether match was used
+    bool matchUsed = false;
+    double ransacReprojThreshold = 3;
 };
 
 
