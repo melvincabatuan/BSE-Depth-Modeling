@@ -14,6 +14,11 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>showQuantizedDepth.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -23,6 +28,11 @@
 			<true/>
 		</dict>
 		<key>3A75B5351A41BF16005A5EBB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3A75B5771A43299E005A5EBB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
