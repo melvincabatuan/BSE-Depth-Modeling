@@ -89,6 +89,7 @@
 		3A75B56A1A41CC4E005A5EBB /* estimateFeatureHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A75B5671A41CC4E005A5EBB /* estimateFeatureHomography.cpp */; };
 		3A75B56F1A41CCE4005A5EBB /* main_featureHomo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A75B5691A41CC4E005A5EBB /* main_featureHomo.cpp */; };
 		3A75B5701A41CCE8005A5EBB /* estimateFeatureHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A75B5671A41CC4E005A5EBB /* estimateFeatureHomography.cpp */; };
+		3A75B5731A4321C7005A5EBB /* VideoReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A75B5721A4321C7005A5EBB /* VideoReader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -163,6 +164,7 @@
 		3A75B5671A41CC4E005A5EBB /* estimateFeatureHomography.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = estimateFeatureHomography.cpp; sourceTree = "<group>"; };
 		3A75B5681A41CC4E005A5EBB /* estimateFeatureHomography.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = estimateFeatureHomography.h; sourceTree = "<group>"; };
 		3A75B5691A41CC4E005A5EBB /* main_featureHomo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main_featureHomo.cpp; sourceTree = "<group>"; };
+		3A75B5721A4321C7005A5EBB /* VideoReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoReader.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,6 +289,7 @@
 				3A0CBA321A3CC5D7004511CB /* Project.h */,
 				3A0CBA331A3CC5D7004511CB /* VideoWriter.cpp */,
 				3A0CBA341A3CC5D7004511CB /* VideoWriterv2.cpp */,
+				3A75B5721A4321C7005A5EBB /* VideoReader.cpp */,
 			);
 			path = BSEProject;
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 			files = (
 				3A0CBA351A3CC5D7004511CB /* VideoWriter.cpp in Sources */,
 				3A0CBA361A3CC5D7004511CB /* VideoWriterv2.cpp in Sources */,
+				3A75B5731A4321C7005A5EBB /* VideoReader.cpp in Sources */,
 				3A75B56A1A41CC4E005A5EBB /* estimateFeatureHomography.cpp in Sources */,
 				3A75B5311A419307005A5EBB /* listCreator.cpp in Sources */,
 				3A0CBA2A1A3CC52E004511CB /* main.cpp in Sources */,

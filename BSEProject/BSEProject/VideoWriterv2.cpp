@@ -27,29 +27,60 @@ bool dirExists(const char *path)
         return false;
 }
 
+bool writeCamParams(std::string fileName, CvNI2 & camera) {
+    //Save Camera Settings:
+    FileStorage fs(fileName, FileStorage::WRITE);
+    
+    fs << "depth_frame_res" << "[" << camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_WIDTH ) <<
+                                      camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_HEIGHT ) << "]";
+    fs << "depth_max_depth" << camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_OPENNI_FRAME_MAX_DEPTH );
+    fs << "depth_fps" << camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FPS );
+    fs << "depth_registration" << camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_OPENNI_REGISTRATION );
+    fs << "depth_focal_length" << camera.get( CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH);
+    fs << "depth_base_line" << camera.get( CAP_OPENNI_DEPTH_GENERATOR_BASELINE);
+    
+    fs << "image_frame_res" << "[" << camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FRAME_WIDTH ) <<
+                                      camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FRAME_HEIGHT ) << "]";
+    fs << "image_fps" << camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FPS );
+//    fs << "image_focal_length" << camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_OPENNI_FOCAL_LENGTH);
+    return true;
+}
+
+
+
 
 int writeRGBv2(void) {
     try {
 
-        string file = "tummy1_";
+        string file = "tummyNip_";
         string RGBname = file + "RGB.avi";
         string Depthname = file + "Depth.avi";
         string fileDat = file + "Dat.xml";
         
-        string pathname = file + "dep";
+        string pathDepthDir = file + "depth";
+        string pathImgDir = file + "img";
+        
         
         char * dir = getcwd(NULL, 0); // Platform-dependent, see reference link below
         printf("Current dir: %s\n", dir);
         
-        if (!dirExists(pathname.c_str())) {
+        if (!dirExists(pathDepthDir.c_str())) {
             
-            int statDir = mkdir(pathname.c_str(),S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+            int statDir = mkdir(pathDepthDir.c_str(),S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
             if (statDir == 0)
-                cout << "Created " << pathname << "Directory " << endl;
+                cout << "Created " << pathDepthDir << " Directory " << endl;
             else
-                cout << "cannot create " <<pathname <<"Directory " << endl;
+                cout << "cannot create " <<pathDepthDir <<" Directory " << endl;
         }
         
+        if (!dirExists(pathImgDir.c_str())) {
+            
+            int statDir = mkdir(pathImgDir.c_str(),S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+            if (statDir == 0)
+                cout << "Created " << pathImgDir << " Directory " << endl;
+            else
+                cout << "cannot create " <<pathImgDir <<" Directory " << endl;
+        }
         
         CvNI2 camera;
         camera.open();
@@ -67,7 +98,7 @@ int writeRGBv2(void) {
         cv::VideoWriter rgbVid, depthVid;
         cv::Mat color,depth,depth_color;
         
-        
+        writeCamParams(fileDat,camera);
         
         // Print some avalible device settings.
         cout << "\nDepth generator output mode:" << endl <<
@@ -93,13 +124,14 @@ int writeRGBv2(void) {
         }
         
         Size sz = Size ( (int) camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FRAME_WIDTH ), (int)camera.get( CAP_OPENNI_IMAGE_GENERATOR+CAP_PROP_FRAME_HEIGHT ));
-        rgbVid.open(RGBname, VideoWriter::fourcc('D','I','V','X'), 30, sz, true );
+//        rgbVid.open(RGBname, VideoWriter::fourcc('D','I','V','X'), 30, sz, true );
         Size szDep = Size ( (int) camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_WIDTH ),
                            (int) camera.get( CAP_OPENNI_DEPTH_GENERATOR+CAP_PROP_FRAME_HEIGHT ));
 //        depthVid.open(Depthname, VideoWriter::fourcc('F','F','V','1'), 30, szDep, false);
         int ctr = 1;
-        ostringstream ss;
+        ostringstream ss,ssImg;
         bool stop=false;
+        waitKey(3000);
         while ( camera.grab() && ! stop ) {
             Mat depth,color;
             Mat bgrImage,rgbImage;
@@ -107,12 +139,16 @@ int writeRGBv2(void) {
             camera.retrieve ( color,depth );
             
             ss.str("");
+            ssImg.str("");
             ss << setfill('0') << setw(5) << ctr;
-            string fileImg = pathname + "/" + file + ss.str() + ".png";
-            imwrite(fileImg, depth);
+            ssImg << setfill('0') << setw(5) << ctr;
+            string fileDep = pathDepthDir + "/" + file + ss.str() + ".png";
+            string fileImag = pathImgDir + "/" + file + ssImg.str() + ".png";
+            imwrite(fileDep, depth);
+            imwrite(fileImag,color);
             //            depthVid << depthMap;
 //            cvtColor(bgrImage, rgbImage, COLOR_BGR2RGB);
-            rgbVid << color;
+//            rgbVid << color;
             
             showDepth ( depth,depth_color );
             cv::imshow ( "color",color );

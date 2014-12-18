@@ -19,20 +19,20 @@ int main(int argc, const char * argv[]) {
     
     
     
-//    bool status = writeRGBv2();
+    bool status = writeRGBv2();
     
 //    listCreator("tummy1_dep/tummy1.yaml", "tummy1_dep/*.png");
-    
-    Ptr<FeatureDetector> detector = GFTTDetector::create();
-    Ptr<DescriptorExtractor> extractor = xfeatures2d::SIFT::create();
-    Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce");
-    
-    RobustMatcher rmatcher;
-    rmatcher.setFeatureDetector(detector);
-    rmatcher.setDescriptorExtractor(extractor);
-    rmatcher.setDescriptorMatcher(matcher);
-    
-    
+//    
+//    Ptr<FeatureDetector> detector = GFTTDetector::create();
+//    Ptr<DescriptorExtractor> extractor = xfeatures2d::SIFT::create();
+//    Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce");
+//    
+//    RobustMatcher rmatcher;
+//    rmatcher.setFeatureDetector(detector);
+//    rmatcher.setDescriptorExtractor(extractor);
+//    rmatcher.setDescriptorMatcher(matcher);
+//    
+//    
     
     
     

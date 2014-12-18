@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<depth_frame_res>
+  640. 480.</depth_frame_res>
+<depth_max_depth>10000.</depth_max_depth>
+<depth_fps>30.</depth_fps>
+<depth_registration>1.</depth_registration>
+<depth_focal_length>570.</depth_focal_length>
+<depth_base_line>75.</depth_base_line>
+<image_frame_res>
+  640. 480.</image_frame_res>
+<image_fps>30.</image_fps>
+</opencv_storage>
